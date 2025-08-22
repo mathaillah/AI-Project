@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR File Upload</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #result { margin-top: 20px; padding: 15px; border: 1px solid #ccc; background-color: #f9f9f9; white-space: pre-wrap; }
+        button { padding: 10px 15px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        input[type="file"] { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Upload CV for OCR</h1>
+
+    <input type="file" id="cvFile" accept="image/*,application/pdf">
+    <button onclick="uploadFile()">Process CV</button>
+
+    <h2>Extracted Text:</h2>
+    <div id="result">
+        No text extracted yet.
+    </div>
+
+    <script>
+        async function uploadFile() {
+            const fileInput = document.getElementById('cvFile');
+            const resultDiv = document.getElementById('result');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                resultDiv.textContent = 'Please select a file first.';
+                return;
+            }
+
+            resultDiv.textContent = 'Processing...';
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('http://localhost:8000/ocr/process-cv', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+                }
+
+                const data = await response.json();
+                resultDiv.textContent = data.text || 'No text found.';
+
+            } catch (error) {
+                console.error('Error:', error);
+                resultDiv.textContent = `Error processing file: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
