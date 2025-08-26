@@ -13,15 +13,18 @@ async def process_cv(file: UploadFile = File(...)):
     """
     Processes a single CV file and returns the extracted text.
     """
-    # Create a temporary file to store the uploaded file
-    with tempfile.NamedTemporaryFile(delete=False, suffix=file.filename) as temp_file:
-        shutil.copyfileobj(file.file, temp_file)
-        temp_file_path = temp_file.name
+    temp_file_path = ""
+    try:
+        # Create a temporary file to store the uploaded file
+        with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(file.filename)[1]) as temp_file:
+            shutil.copyfileobj(file.file, temp_file)
+            temp_file_path = temp_file.name
 
-    extracted_text = extract_text_from_image(temp_file_path)
-
-    # Clean up the temporary file
-    os.unlink(temp_file_path)
+        extracted_text = extract_text_from_image(temp_file_path)
+    finally:
+        # Clean up the temporary file
+        if temp_file_path and os.path.exists(temp_file_path):
+            os.unlink(temp_file_path)
 
     # Save the extracted text to a file in ocr_results folder
     results_dir = "ocr_results"
