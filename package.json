@@ -1,0 +1,29 @@
+{
+  "name": "ai-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mathaillah/AI-Project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mathaillah/AI-Project/issues"
+  },
+  "homepage": "https://github.com/mathaillah/AI-Project#readme",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.17.4",
+    "zod": "^3.25.76"
+  }
+}
